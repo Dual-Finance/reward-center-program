@@ -266,6 +266,15 @@ pub struct ExecuteSale<'info> {
     )]
     pub program_as_signer: UncheckedAccount<'info>,
 
+    #[account(mut)]
+    pub staking_option_state: Box<Account<'info, staking_options::State>>,
+    #[account(mut)]
+    pub option_mint: Box<Account<'info, Mint>>,
+    #[account(mut)]
+    pub user_so_account: Box<Account<'info, TokenAccount>>,
+    #[account(mut)]
+    pub staking_options_program: Program<'info, staking_options::program::StakingOptions>,
+
     /// Auction House Program
     pub auction_house_program: Program<'info, AuctionHouseProgram>,
     /// Token Program
@@ -399,6 +408,42 @@ pub fn handler(
             seller_payout,
         )?
     };
+
+
+    let (so_signer, _so_signer_bump) = Pubkey::find_program_address(
+        &[
+            "SEED".as_bytes(),
+        ],
+        &staking_options::id(),
+    );
+
+    // TODO: Make the authority be correct
+    // Staking options CPI
+    let staking_option_accounts = staking_options::cpi::accounts::Issue {
+        authority: ctx.accounts.payer.to_account_info(),
+        state: ctx.accounts.staking_option_state.to_account_info(),
+        option_mint: ctx.accounts.option_mint.to_account_info(),
+        user_so_account: ctx.accounts.user_so_account.to_account_info(),
+        token_program: ctx.accounts.token_program.to_account_info(),
+    };
+
+    let cpi_program = ctx.accounts.staking_options_program.to_account_info();
+    let amount: u64 = 123;
+    let expiration: u64 = 123;
+
+    staking_options::cpi::issue(
+        CpiContext::new_with_signer(
+            cpi_program,
+            staking_option_accounts,
+            &[&["SEED".as_bytes()]],
+        ),
+        amount,
+        expiration
+    );
+
+
+
+
 
     Ok(())
 }

@@ -1361,6 +1361,7 @@ dependencies = [
  "solana-sdk",
  "spl-associated-token-account",
  "spl-token",
+ "staking-options",
 ]
 
 [[package]]
@@ -3377,6 +3378,12 @@ dependencies = [
 ]
 
 [[package]]
+name = "solana-security-txt"
+version = "1.0.1"
+source = "registry+https://github.com/rust-lang/crates.io-index"
+checksum = "f14189df19df7f3977a7ea236ccae6cdc40855ab5baf1ab2796a091ef5c490d1"
+
+[[package]]
 name = "solana-send-transaction-service"
 version = "1.9.29"
 source = "registry+https://github.com/rust-lang/crates.io-index"
@@ -3539,6 +3546,17 @@ name = "stable_deref_trait"
 version = "1.2.0"
 source = "registry+https://github.com/rust-lang/crates.io-index"
 checksum = "a8f112729512f8e442d81f95a8a7ddf2b7c6b8a1a6f509a95864142b30cab2d3"
+
+[[package]]
+name = "staking-options"
+version = "0.0.1"
+dependencies = [
+ "anchor-lang",
+ "anchor-spl",
+ "solana-security-txt",
+ "spl-token",
+ "vipers",
+]
 
 [[package]]
 name = "static_assertions"
@@ -4068,6 +4086,17 @@ name = "version_check"
 version = "0.9.4"
 source = "registry+https://github.com/rust-lang/crates.io-index"
 checksum = "49874b5167b65d7193b8aba1567f5c7d93d001cafc34600cee003eda787e483f"
+
+[[package]]
+name = "vipers"
+version = "2.0.6"
+source = "registry+https://github.com/rust-lang/crates.io-index"
+checksum = "59ae9a95d96cec623d9ff69d026671c79a0001d3df9bc825bfa648297f7c05bf"
+dependencies = [
+ "anchor-lang",
+ "anchor-spl",
+ "num-traits",
+]
 
 [[package]]
 name = "void"
