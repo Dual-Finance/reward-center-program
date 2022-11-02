@@ -411,6 +411,9 @@ pub fn handler(
         )?
     };
 
+    // TODO: Verify that the state that the user passed in is actually the one
+    // that the rewards program wants to use.
+    
     // Staking options CPI
     let staking_option_accounts = staking_options::cpi::accounts::Issue {
         authority: ctx.accounts.staking_option_signer.to_account_info(),
@@ -428,7 +431,7 @@ pub fn handler(
         CpiContext::new_with_signer(
             cpi_program,
             staking_option_accounts,
-            &[&["SEED".as_bytes()]],
+            &[&["staking-options".as_bytes()]],
         ),
         amount,
         expiration
