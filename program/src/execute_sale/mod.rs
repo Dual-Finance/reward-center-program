@@ -17,6 +17,7 @@ use mpl_auction_house::{
     AuctionHouse, Auctioneer,
 };
 use solana_program::program::invoke_signed;
+use staking_options::program::StakingOptions as StakingOptionsProgram;
 
 #[derive(AnchorSerialize, AnchorDeserialize)]
 pub struct ExecuteSaleParams {
@@ -266,14 +267,15 @@ pub struct ExecuteSale<'info> {
     )]
     pub program_as_signer: UncheckedAccount<'info>,
 
+    /// CHECK: Not dangerous. TODO: Check the seeds in constraint with a given bump
+    pub staking_option_signer: UncheckedAccount<'info>,
     #[account(mut)]
     pub staking_option_state: Box<Account<'info, staking_options::State>>,
     #[account(mut)]
     pub option_mint: Box<Account<'info, Mint>>,
     #[account(mut)]
     pub user_so_account: Box<Account<'info, TokenAccount>>,
-    #[account(mut)]
-    pub staking_options_program: Program<'info, staking_options::program::StakingOptions>,
+    pub staking_options_program: Program<'info, StakingOptionsProgram>,
 
     /// Auction House Program
     pub auction_house_program: Program<'info, AuctionHouseProgram>,
@@ -409,18 +411,9 @@ pub fn handler(
         )?
     };
 
-
-    let (so_signer, _so_signer_bump) = Pubkey::find_program_address(
-        &[
-            "SEED".as_bytes(),
-        ],
-        &staking_options::id(),
-    );
-
-    // TODO: Make the authority be correct
     // Staking options CPI
     let staking_option_accounts = staking_options::cpi::accounts::Issue {
-        authority: ctx.accounts.payer.to_account_info(),
+        authority: ctx.accounts.staking_option_signer.to_account_info(),
         state: ctx.accounts.staking_option_state.to_account_info(),
         option_mint: ctx.accounts.option_mint.to_account_info(),
         user_so_account: ctx.accounts.user_so_account.to_account_info(),
@@ -439,11 +432,7 @@ pub fn handler(
         ),
         amount,
         expiration
-    );
-
-
-
-
+    )?;
 
     Ok(())
 }
