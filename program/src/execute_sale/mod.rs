@@ -422,7 +422,7 @@ pub fn handler(
 
     let cpi_program = ctx.accounts.staking_options_program.to_account_info();
     let amount: u64 = 123;
-    let expiration: u64 = 123;
+    let expiration: u64 = ctx.accounts.staking_option_state.option_expiration;
 
     staking_options::cpi::issue(
         CpiContext::new_with_signer(
