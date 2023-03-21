@@ -1,6 +1,6 @@
 # Reward Center
 
-A program that facilitates the payout of a spl token as rewards to buyer and sellers on the successful sell of an NFTs.
+A program that facilitates the payout of an spl token as a reward to buyers and sellers on the successful sale of an NFT.
 
 ## Definitions
 
